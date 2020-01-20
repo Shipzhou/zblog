@@ -1,9 +1,8 @@
 package com.shipzhou.zblog.service;
 
 import com.shipzhou.zblog.entity.dto.account.AccountDTO;
-import com.shipzhou.zblog.exception.checked.AccountExistException;
-import com.shipzhou.zblog.exception.checked.EmailExistException;
-import com.shipzhou.zblog.exception.checked.PhoneExistException;
+import com.shipzhou.zblog.entity.dto.account.UserInfoDTO;
+import com.shipzhou.zblog.exception.checked.*;
 
 /**
  * @author Shipzhou
@@ -16,4 +15,17 @@ public interface AccountService {
      * @return
      */
     Long registeAccount(AccountDTO accountDTO) throws AccountExistException, PhoneExistException, EmailExistException;
+
+    /**
+     * 设置用户信息
+     * @param userInfoDTO
+     */
+    void setUserInfo(UserInfoDTO userInfoDTO);
+
+    /**
+     * 统一密码登录接口
+     * @param accountDTO
+     * @return
+     */
+    String login(AccountDTO accountDTO) throws AccountNotExistException, AccountFrozenException, PasswordNotMatchException;
 }

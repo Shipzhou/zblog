@@ -11,4 +11,6 @@ public class AttrConstant {
 
     // 全局布尔值 false
     public static final Integer BOOLEAN_FALSE = 0;
+
+
 }

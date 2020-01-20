@@ -2,3 +2,7 @@ spring:
   data:
     mongodb:
       uri: mongodb://zblog:mongozblog@dev.huscky.com:27017/zblog
+
+jwt:
+  secret: shipzhou
+  expireTime: 86400000

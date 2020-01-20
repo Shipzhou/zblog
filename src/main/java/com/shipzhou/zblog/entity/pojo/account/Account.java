@@ -1,5 +1,6 @@
 package com.shipzhou.zblog.entity.pojo.account;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.shipzhou.zblog.annotation.AutoKey;
 import com.shipzhou.zblog.constant.AccountStatusEnum;
 import com.shipzhou.zblog.constant.ExistEnum;
@@ -11,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 /**
  * @author Shipzhou
  * @date: 2020/1/19
+ * 账号表
  */
 @Data
 @Document(collection = "account")
@@ -25,6 +27,7 @@ public class Account {
 
     // 注册密码 md5算法后
     @Field
+    @JSONField(serialize = false)
     private String password;
 
     // 手机号
