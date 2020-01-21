@@ -2,7 +2,10 @@ package com.shipzhou.zblog.service;
 
 import com.shipzhou.zblog.constant.AttrConstant;
 import com.shipzhou.zblog.entity.dto.article.ArticleDTO;
+import com.shipzhou.zblog.entity.pojo.account.Account;
 import com.shipzhou.zblog.entity.pojo.article.Article;
+import com.shipzhou.zblog.entity.vo.article.ListArticleVO;
+import com.shipzhou.zblog.entity.vo.common.PageVO;
 import com.shipzhou.zblog.exception.checked.ArticleContentAndTitleNullException;
 
 /**
@@ -32,4 +35,11 @@ public interface ArticleService  {
      * @return
      */
     Long publishArticle(ArticleDTO articleDTO) throws ArticleContentAndTitleNullException;
+
+    /**
+     * 根据条件分页查询文章
+     * @param params
+     * @return
+     */
+    PageVO<ListArticleVO> getPageListArticleByParams(Account account, String params);
 }

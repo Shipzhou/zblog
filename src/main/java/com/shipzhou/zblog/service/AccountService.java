@@ -2,6 +2,7 @@ package com.shipzhou.zblog.service;
 
 import com.shipzhou.zblog.entity.dto.account.AccountDTO;
 import com.shipzhou.zblog.entity.dto.account.UserInfoDTO;
+import com.shipzhou.zblog.entity.pojo.account.Account;
 import com.shipzhou.zblog.exception.checked.*;
 
 /**
@@ -28,4 +29,6 @@ public interface AccountService {
      * @return
      */
     String login(AccountDTO accountDTO) throws AccountNotExistException, AccountFrozenException, PasswordNotMatchException;
+
+    void test(Account account);
 }

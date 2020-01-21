@@ -2,8 +2,11 @@ package com.shipzhou.zblog.service.impl;
 
 import com.shipzhou.zblog.constant.ArticleConstant;
 import com.shipzhou.zblog.entity.dto.article.ArticleDTO;
+import com.shipzhou.zblog.entity.pojo.account.Account;
 import com.shipzhou.zblog.entity.pojo.account.UserInfo;
 import com.shipzhou.zblog.entity.pojo.article.Article;
+import com.shipzhou.zblog.entity.vo.article.ListArticleVO;
+import com.shipzhou.zblog.entity.vo.common.PageVO;
 import com.shipzhou.zblog.exception.checked.ArticleContentAndTitleNullException;
 import com.shipzhou.zblog.exception.runtime.RequireParamNullException;
 import com.shipzhou.zblog.service.ArticleService;
@@ -58,6 +61,11 @@ public class ArticleServiceImpl extends BaseService implements ArticleService {
         doPublishArticle(article);
 
         return article.getId();
+    }
+
+    @Override
+    public PageVO<ListArticleVO> getPageListArticleByParams(Account account, String params) {
+        return null;
     }
 
     private void doPublishArticle(Article article) {

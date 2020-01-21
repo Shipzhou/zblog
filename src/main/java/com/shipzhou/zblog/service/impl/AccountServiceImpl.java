@@ -1,5 +1,6 @@
 package com.shipzhou.zblog.service.impl;
 
+import com.shipzhou.zblog.annotation.Current;
 import com.shipzhou.zblog.constant.AccountStatusEnum;
 import com.shipzhou.zblog.constant.RegisteTypeEnum;
 import com.shipzhou.zblog.entity.dto.account.AccountDTO;
@@ -86,6 +87,11 @@ public class AccountServiceImpl extends BaseService implements AccountService {
             throw new PasswordNotMatchException();
 
         return JwtUtil.genToken(account);
+    }
+
+    @Override
+    public void test(Account account) {
+        System.out.println(account.toString());
     }
 
 
