@@ -6,7 +6,7 @@ package com.shipzhou.zblog.constant;
  */
 public enum  ExistEnum {
     TRUE("存在",1),
-    FALSE("删除",2);
+    FALSE("删除",0);
 
     private String name;
     private Integer value;

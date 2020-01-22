@@ -23,6 +23,10 @@ public class Article {
     @Id
     private Long id;
 
+    // 作者id
+    @Field
+    private Long accountId;
+
     // 文章标题
     @Field
     private String title;
@@ -59,11 +63,19 @@ public class Article {
     @Field
     private Long lastEditTime;
 
+    // 阅读数
+    @Field
+    private Integer readNum;
+
+    // 评论数
+    @Field
+    private Integer commentNum;
+
     // 文章状态 1 已发布 2 草稿
     @Field
     private Integer status;
 
-    // 删除标识 1 存在 2已删除
+    // 删除标识 1 存在 0已删除
     @Field
     private Integer exist;
 
@@ -81,12 +93,13 @@ public class Article {
     }
 
     private static Article genDefaultArticle() {
-        return new Article(System.currentTimeMillis(), ExistEnum.TRUE.getValue());
+        return new Article(System.currentTimeMillis(), ExistEnum.TRUE.getValue(),0);
     }
 
-    private Article(Long lastEditTime, Integer exist) {
+    private Article(Long lastEditTime, Integer exist,Integer readNum) {
         this.lastEditTime = lastEditTime;
         this.exist = exist;
+        this.readNum = readNum;
     }
 
     public Article() {

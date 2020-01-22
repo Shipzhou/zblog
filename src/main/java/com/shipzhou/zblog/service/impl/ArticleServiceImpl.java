@@ -1,9 +1,9 @@
 package com.shipzhou.zblog.service.impl;
 
-import com.shipzhou.zblog.constant.ArticleConstant;
+import com.alibaba.fastjson.JSONObject;
 import com.shipzhou.zblog.entity.dto.article.ArticleDTO;
+import com.shipzhou.zblog.entity.dto.common.PageDTO;
 import com.shipzhou.zblog.entity.pojo.account.Account;
-import com.shipzhou.zblog.entity.pojo.account.UserInfo;
 import com.shipzhou.zblog.entity.pojo.article.Article;
 import com.shipzhou.zblog.entity.vo.article.ListArticleVO;
 import com.shipzhou.zblog.entity.vo.common.PageVO;
@@ -14,10 +14,16 @@ import com.shipzhou.zblog.service.BaseService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Shipzhou
@@ -30,17 +36,18 @@ public class ArticleServiceImpl extends BaseService implements ArticleService {
     private MongoTemplate mongoTemplate;
 
     @Override
-    public Long createDraftArticle(ArticleDTO articleDTO) throws ArticleContentAndTitleNullException {
+    public Long createDraftArticle(Account account,ArticleDTO articleDTO) throws ArticleContentAndTitleNullException {
         // 检验必要参数是否缺失
         checkArticleRequireParam(articleDTO, false);
         Article draftArticle = Article.genDefaultDraftArticle();
+        draftArticle.setAccountId(account.getId());     // 设置文章作者
         BeanUtils.copyProperties(articleDTO, draftArticle);
         mongoTemplate.insert(draftArticle);
         return draftArticle.getId();
     }
 
     @Override
-    public void updateDraftArticle(ArticleDTO articleDTO) throws ArticleContentAndTitleNullException {
+    public void updateDraftArticle(Account account, ArticleDTO articleDTO) throws ArticleContentAndTitleNullException {
         // 检验必要参数是否缺失
         checkArticleRequireParam(articleDTO, true);
 
@@ -64,8 +71,35 @@ public class ArticleServiceImpl extends BaseService implements ArticleService {
     }
 
     @Override
-    public PageVO<ListArticleVO> getPageListArticleByParams(Account account, String params) {
-        return null;
+    public PageVO<ListArticleVO> getPageListArticleByParams(Account account, String params, PageDTO pageDTO) {
+        PageVO<ListArticleVO> result = new PageVO<>();
+        JSONObject jsonParam = JSONObject.parseObject(params);
+
+        Integer pageIndex = pageDTO.getPageIndex();
+        Integer pageSize = pageDTO.getPageSize();
+
+        // 必须参数
+        if (pageIndex == null || pageSize == null)
+            throw  new RequireParamNullException();
+
+        Criteria criteria = getExistCriteria();
+        // 动态查询条件
+        if (jsonParam.size() > 0) {
+            Set<String> keys = jsonParam.keySet();
+            keys.forEach(key -> {
+                criteria.and(key).is(jsonParam.get(key));
+            });
+        }
+        Query query = new Query(criteria);
+        Long total = mongoTemplate.count(query,Article.class);
+
+        // 分页查询
+        query.skip((pageIndex -1) * pageSize).limit(pageSize);
+        List<Article> datas = mongoTemplate.find(query,Article.class);
+        // 转换为vo
+        result.setDatas(transToArticleVO(datas));
+        result.setTotal(total);
+        return result;
     }
 
     private void doPublishArticle(Article article) {
@@ -128,6 +162,21 @@ public class ArticleServiceImpl extends BaseService implements ArticleService {
             if (articleDTO.getId() == null)
                 throw new RequireParamNullException();
         }
+    }
+
+    private List<ListArticleVO> transToArticleVO(List<Article> source) {
+        List<ListArticleVO> result = new ArrayList<>();
+        if (CollectionUtils.isEmpty(source))
+            return  result;
+
+        source.forEach(article -> {
+            ListArticleVO articleVO = new ListArticleVO();
+            BeanUtils.copyProperties(article,articleVO);
+
+            // todo  其他属性
+        });
+
+        return result;
     }
 
 }

@@ -10,9 +10,4 @@ import lombok.Data;
 @Data
 public class ListArticleVO extends Article {
 
-    // 阅读数
-    private Integer readNum;
-
-    // 评论数
-    private Integer commentNum;
 }
